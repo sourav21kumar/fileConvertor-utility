@@ -1,0 +1,115 @@
+<link rel="stylesheet" href="main.css" />
+
+<script
+      src="https://kit.fontawesome.com/2bb5e6179c.js"
+      crossorigin="anonymous"
+    ></script>
+
+<div class="whole-container">
+  <div class="main-canvas-container">
+    <div class="Inside-main-canvas-container">
+      
+    
+  
+    </div>
+  </div>
+
+  <div class="buttons-container">
+    <div id="radiogroup" role="radiogroup">
+      <div role="radio" id="radio1">
+        <div class="radio-input">
+          <label for="input1"></label>
+          <input type="radio" name="" id="input1" checked>
+        </div>
+        <div class="radiotext">
+          <div class="text1">Convert entire pages</div>
+          <div class="text2">Export each PDF page to JPG</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="convertButton btns">
+      
+      <button type="button">Convert <i class="fas fa-hand-point-right" style="margin-left: 6px;"></i></button>
+    </div>
+  </div>
+  
+</div>
+
+
+
+<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+<script>
+  
+  const url = localStorage.getItem('fileURL')
+  // const url = "../files/PC EXPT - 9.pdf";
+  
+  console.log(url)
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "//mozilla.github.io/pdf.js/build/pdf.worker.js";
+  let pdfDoc = null,
+    totalPages = 0,
+    pageIsRendering = false,
+    pageNumIsPending = null;
+
+    const scale = 0.95;
+  const canvasContainer = document.querySelector(".Inside-main-canvas-container");
+
+  // canvas = document.querySelector('#pdfRender'),
+  // ctx = canvas.getContext('2d');
+
+  // RENDER THE PAGE
+  const renderPage = (num) => {
+    pageIsRendering = true;
+    const renderDiv = generateCanvasRenderDiv()
+    console.log(renderDiv)
+    const canvas = generateCanvas();
+    console.log(canvas);
+
+   renderDiv.setAttribute('class','renderDivStyle')
+    // canvas.setAttribute('class','canvasStyle')
+    const ctx = canvas.getContext("2d");
+
+    pdfDoc.getPage(num).then((page) => {
+      renderDiv.appendChild(canvas)
+      canvasContainer.appendChild(renderDiv);
+      console.log(page);
+      const viewport = page.getViewport({ scale: scale });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderCtx = {
+        canvasContext: ctx,
+        viewport,
+      };
+      page.render(renderCtx).promise.then(() => {
+        pageIsRendering = false;
+        if (pageNumIsPending !== null) {
+          renderPage(pageNumIsPending);
+          pageNumIsPending = null;
+        }
+      });
+    });
+  };
+
+  // GET THE DOCUMENT
+  pdfjsLib.getDocument(url).promise.then((pdfDoc_) => {
+    pdfDoc = pdfDoc_;
+    console.log(pdfDoc);
+    totalPages = pdfDoc_.numPages;
+
+    for (let i = 1; i <=totalPages; i++) {
+      renderPage(i);
+    }
+  });
+  function generateCanvasRenderDiv(){
+
+    const renderDiv = document.createElement('div')
+    return renderDiv;
+  }
+  function generateCanvas() {
+    const canvasEle = document.createElement("canvas");
+    return canvasEle;
+  }
+
+</script>

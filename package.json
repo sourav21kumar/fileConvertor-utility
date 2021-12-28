@@ -1,0 +1,23 @@
+{
+  "name": "fileconvertor",
+  "version": "1.0.0",
+  "description": "File Convertor Utility Tool",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sourav21kumar",
+  "license": "ISC",
+  "dependencies": {
+    "compressing": "^1.5.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "gm": "^1.23.1",
+    "mongoose": "^6.0.12",
+    "multer": "^1.4.3",
+    "pdf-poppler": "^0.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

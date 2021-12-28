@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Fjalla+One&family=Francois+One&family=Oswald:wght@700&family=Readex+Pro:wght@600&family=Righteous&family=Source+Code+Pro:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <link rel="stylesheet" href="main.css" />
+    <script
+      src="https://kit.fontawesome.com/2bb5e6179c.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <div class="pdf-image-container">
+      <div class="header">
+        <h1>PDF <i class="fas fa-arrow-right"></i> WORD</h1>
+
+        <p>
+          Convert each PDF page into this image formats (JPG,PNG,JPEG) or
+          extract all images contained in a PDF.
+        </p>
+      </div>
+      <div class="form-container">
+        <form>
+          <label for="file-Upload" class="custom-file-upload"
+            ><i class="fas fa-file-upload" style="margin-right: 14px"></i>Upload
+            your file</label
+          >
+          <input type="file" name="data" id="file-Upload" />
+          
+        </form>
+      </div>
+      
+     
+    </div>
+  </body>
+  <script>
+    
+    const form = document.querySelector("form");
+    console.log(form);
+    const input = document.querySelector("#file-Upload");
+
+    // EVENT LISTNER FOR CHANGE EVENT WHEN A FILE IS UPLOADED
+    input.addEventListener("change", async () => {
+     
+      const preview_details_from_frontend = await fetch("/uploadPreview", {
+        method: "POST",
+        body: await getFormData(),
+      });
+
+        const dataRecieved = await preview_details_from_frontend.json();
+        console.log(dataRecieved);
+        
+          
+          if(dataRecieved)
+          {
+           
+             setStorage(dataRecieved) // for storing the fileURL in the localstorage of the client
+             location.assign('http://localhost:3000/filepreview')  // go to the upload page
+            //  const pdfreader =  fetch('/filepreview',{
+            //    method:'GET',
+            //    headers:{'content-type':'text/html'}
+            //  })
+          }
+
+        
+    });
+
+    
+    // convSubmit.addEventListener("click", async (e) => {
+    //   e.preventDefault();
+    //   const filedata = await getFormData()
+    //   console.log('i was clickled')
+    //   const formImgFormat = document.querySelector('#fileFormat')
+    //   console.log(formImgFormat)
+    //   filedata.append('fileFormat',`${formImgFormat.value}`)
+    //   const request_to_backend = await fetch("/upload", {
+    //     method: "POST",
+    //     body: await filedata,
+    //   });
+
+    //   // const response_from_backend = await request_to_backend.json();
+    //   // console.log(response_from_backend);
+    // });
+
+    function getFormData() {
+      const formInput = document.querySelector("#file-Upload");
+      console.log(formInput);
+      const formData = new FormData();
+      formData.append("data", formInput.files[0])
+      return formData;
+    }
+
+    function setStorage(data)
+    {
+      localStorage.setItem('fileURL',`files/${data.originalname}`)
+    }
+  </script>
+</html>
